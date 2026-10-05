@@ -3,6 +3,15 @@
 Verified on firmware **1.1.3** (`/etc/pineapplepager/version`; `DISTRIB_RELEASE 24.10.1`),
 kernel 6.6.86.
 
+## At a glance
+- **Platform:** OpenWrt-based ("Pineapple Pager 24.10.1", target `ramips/mt76x8`, arch
+  `mipsel_24kc`), kernel **6.6.86**, taints `no-all busybox`.
+- **SoC:** MediaTek **MT7628AN** (ver 1, eco 2), CPU **MIPS 24KEc V5.5** (~385 BogoMIPS).
+- **Cross-compile target:** `mipsel-unknown-linux-*` / `GOARCH=mipsle` (24kc). The device's own
+  binaries are musl (`/lib/ld-musl-mipsel-sf.so.1`). There are **no compilers or interpreters on the
+  device** (no gcc/cc, no python/perl/lua/go) — build on a host and copy over; on-device scripting is
+  bash + `awk` + `jq` (+ `sqlite3`).
+
 ## SoC and resources
 - **MediaTek MT7628AN**, mipsel (MIPS32, little-endian), **no hardware FPU**. Consequences:
   - In C, stay **integer-only**.
@@ -16,6 +25,12 @@ kernel 6.6.86.
   reboots, never modify the signed image (so there's no runtime signature issue with editing config
   files), and are reverted by deleting the overlay copy. A **firmware update can overwrite them**, so
   keep a copy of anything you add.
+- **Flash layout (NOR, `/proc/mtd`):** `u-boot`, `u-boot-env`, `factory`, `firmware` (~64 MB, holding
+  `kernel` + the `rootfs` squashfs), `rootfs_data` (~32 MB jffs2 = the overlay). Bulk user storage is
+  the eMMC (`/dev/mmcblk0p1` → `/mmc`, ext4). `/tmp` is tmpfs (RAM).
+
+See also: [capabilities](capabilities.md) (what's installed/supported) and
+[radios & LEDs](radios-and-leds.md).
 
 ## The two processes
 The device runs two cooperating programs:

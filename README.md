@@ -24,11 +24,14 @@ reference point: firmware **1.1.3** (`DISTRIB_RELEASE 24.10.1`), theme framework
 
 ## Contents
 
-- **Device** — [hardware & OS](device/hardware.md), [display & input](device/display-and-input.md),
+- **Device** — [hardware & OS](device/hardware.md),
+  [capabilities (installed/supported)](device/capabilities.md),
+  [radios, LEDs & I2C](device/radios-and-leds.md), [display & input](device/display-and-input.md),
   [local API & helpers](device/local-api.md), [sensors & sysfs](device/sensors.md), [USB](device/usb.md)
 - **Themes** — [format](themes/format.md), [firmware notes & gotchas](themes/firmware-notes.md)
-- **Payloads** — [basics](payloads/basics.md), [building native/Go tools](payloads/building.md),
-  [proven patterns](payloads/patterns.md)
+- **Payloads** — [basics](payloads/basics.md),
+  [Hak5 command reference](payloads/ducky-commands.md),
+  [building native/Go tools](payloads/building.md), [proven patterns](payloads/patterns.md)
 - **Firmware findings** — [confirmed bugs & launch internals](firmware/findings.md)
 
 ## Contributing

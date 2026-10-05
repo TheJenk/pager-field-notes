@@ -5,6 +5,8 @@
 ## Device
 
 - [Hardware & OS](device/hardware.md)
+- [Capabilities: what's installed & supported](device/capabilities.md)
+- [Radios, LEDs & I2C](device/radios-and-leds.md)
 - [Display & Input](device/display-and-input.md)
 - [Local API & Helpers](device/local-api.md)
 - [Sensors & sysfs](device/sensors.md)
@@ -18,6 +20,7 @@
 ## Payloads
 
 - [Payload basics](payloads/basics.md)
+- [Hak5 command reference (DuckyScript)](payloads/ducky-commands.md)
 - [Building native & Go tools](payloads/building.md)
 - [Proven patterns](payloads/patterns.md)
 
