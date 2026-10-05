@@ -14,6 +14,8 @@
 
 ## Themes
 
+- [Getting started](themes/getting-started.md)
+- [Building a theme generator](themes/building-a-generator.md)
 - [Theme format](themes/format.md)
 - [Firmware notes & gotchas](themes/firmware-notes.md)
 

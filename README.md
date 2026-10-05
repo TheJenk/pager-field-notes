@@ -28,7 +28,9 @@ reference point: firmware **1.1.3** (`DISTRIB_RELEASE 24.10.1`), theme framework
   [capabilities (installed/supported)](device/capabilities.md),
   [radios, LEDs & I2C](device/radios-and-leds.md), [display & input](device/display-and-input.md),
   [local API & helpers](device/local-api.md), [sensors & sysfs](device/sensors.md), [USB](device/usb.md)
-- **Themes** — [format](themes/format.md), [firmware notes & gotchas](themes/firmware-notes.md)
+- **Themes** — [getting started](themes/getting-started.md),
+  [building a generator](themes/building-a-generator.md),
+  [format](themes/format.md), [firmware notes & gotchas](themes/firmware-notes.md)
 - **Payloads** — [basics](payloads/basics.md),
   [Hak5 command reference](payloads/ducky-commands.md),
   [building native/Go tools](payloads/building.md), [proven patterns](payloads/patterns.md)
