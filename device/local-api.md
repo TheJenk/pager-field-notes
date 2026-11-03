@@ -18,6 +18,9 @@ Useful routes seen in use:
   stale after an unplug — see [firmware findings](../firmware/findings.md)).
 - `payloads/{id}/run_payload` — run a payload by numeric ID (the UI's own launch path).
 - Various `pineap/*` routes for Wi-Fi/recon config.
+- **2.0.0+:** `pineap/gps/get` (native GPS position and status), `recon/wifi/{status,devices,count}`,
+  `recon/wifi/devices/{mac}/clients`, `recon/bluetooth/{status,devices}`,
+  `recon/bluetooth/devices/{mac}` and `recon/setup`. See [What changed in 2.0.0](../firmware/2.0.0.md).
 
 Shell helpers wrapping the API live in `/lib/hak5/commands.sh` (`HAK5_API_GET` / `HAK5_API_POST` /
 `HAK5_API_PUT`).
@@ -34,7 +37,9 @@ Available to payloads (in `/usr/bin` unless noted):
   (use a shell `trap`) or the UI and your payload will fight over `/dev/fb0`.
 
 Also present and handy: `setsid`, `logger` (writes to `logread`; tag with `-t <name>`), `gpspipe`,
-`gpsctl`, `gpsd`, `awk`, `tcpdump`, `iw`, `curl`, `uci`, `stty`.
+`gpsctl`, `gpsd`, `awk`, `tcpdump`, `iw`, `curl`, `uci`, `stty`. 2.0.0 adds `blue5ctl` and ships
+`sqlite3`. busybox `awk` has `systime()`/`strftime()`. On 2.0 gpsd is off by default, so
+`gpspipe` returns nothing.
 
 **Not present:** `python`, and no serial terminal program (`microcom`/`picocom`/`screen`/`cu`) — talk
 to serial devices with `stty` + redirection or a small custom program.

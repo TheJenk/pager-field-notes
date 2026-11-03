@@ -25,6 +25,9 @@ Key points, with the traps that bite:
 - Put tunables (thresholds, interval, radius) as variables at the top.
 
 ## GPS liveness (don't trust `GPS_LIST`)
+**2.0.0+:** poll the local API `pineap/gps/get` and use its `connected` and `fix` fields; gpsd is off
+by default. What follows is for gpsd on 1.1.x.
+
 - `GPS_LIST` reads the UI's cached serial list; after an unplug it keeps reporting the device. For "is
   the GPS giving data right now", use **gpsd liveness**: stream `gpspipe -w`, refresh a timestamp on
   each `TPV`/`SKY` line, and treat "no data for N seconds" as lost. gpsd emits ~1–2/s even with no fix,
@@ -38,7 +41,11 @@ Key points, with the traps that bite:
   point. gpsd does not always auto-resume after a replug — `/etc/init.d/gpsd restart` reattaches it.
 
 ## Takeover / peripheral gotchas
-- **Bluetooth:** `btmgmt` / `hciconfig` tend to hang in a payload context (they fight the Bluetooth
+- **Bluetooth (2.0.0+):** read the built-in `blue5` scanner (`blue5ctl fetch`) and leave it running;
+  starting `bluetoothd` or rescanning yourself breaks the Pager's own BT recon.
+- **Wi-Fi (2.0.0+):** sniff passively on the monitor interfaces PineAP already runs
+  (`tcpdump -e -n -l type mgt`) instead of adding and retuning your own.
+- **Bluetooth (1.1.x):** `btmgmt` / `hciconfig` tend to hang in a payload context (they fight the Bluetooth
   daemon). Use `bluetoothctl` (`power off`/`on`, `--timeout N scan on`) and parse its output.
 - **RTL-SDR / `rtl_power`:** it buffers output (only writes on a clean exit), and killing it mid-run can
   **wedge the dongle** until a physical replug. Prefer one-shot sweeps; never SIGKILL it mid-run.

@@ -15,7 +15,13 @@ These are the cleanest way to detect charge state / level from a script (poll an
 - There is **no readable `/sys/class/thermal` zone**. The firmware manages overheat/shutdown itself.
   Don't try to build a temperature alert off sysfs — there's nothing to read.
 
-## GPS (gpsd)
+## GPS
+**2.0.0+:** PineAP reads the receiver natively and gpsd is disabled. Use the local API route
+`pineap/gps/get` (JSON with `lat`/`lon`/`fix`/`connected`/accuracy/satellites), or `GPS_GET`. See
+[What changed in 2.0.0](../firmware/2.0.0.md). The gpsd notes below apply to 1.1.x, or to 2.0
+with gpsd switched back on.
+
+### gpsd (1.1.x)
 - `gpsd` (3.25) runs against the configured device, which you can read with
   `uci -q get gpsd.core.device` — it's a `/dev/serial/by-path/<id>` symlink, not a raw `ttyUSB`/`ttyACM`.
 - Read live data:

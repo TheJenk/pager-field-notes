@@ -1,6 +1,7 @@
 # Firmware findings
 
 Observations from testing on firmware **1.1.3** (`24.10.1`). "Verified" means reproduced on hardware.
+For what changed in **2.0.0**, see [What changed in 2.0.0](2.0.0.md).
 
 ## You cannot launch a payload or run a command from a theme item (1.1.3) — *verified*
 A theme menu/dashboard item's `target` is dispatched by the UI as a **component/screen name to navigate

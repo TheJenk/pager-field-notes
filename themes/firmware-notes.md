@@ -1,7 +1,58 @@
 # Theme firmware notes & gotchas
 
-Things learned testing themes on real hardware. Current reference: firmware **1.1.3**, theme framework
-**0.8**.
+Things learned testing themes on real hardware. Current reference: firmware **2.0.0**, theme framework
+**0.9**. Notes below the 2.0.0 section were found on 1.1.x and still apply unless marked.
+
+## Firmware 2.0.0 / theme framework 0.9
+2.0.0 expects **`"theme_framework_version": "0.9"`** and adds new screens. Tested with a 0.8 theme:
+
+- **Two warnings at every UI start:** "this theme is missing required components" (they're taken
+  from the default theme; pressing back five times on the dashboard opens a navigation safe mode),
+  then "this firmware runs a different theme engine version".
+- **Borrowed screens have no status bar.** The missing screens come from the stock theme, but
+  their status bars are looked up as `fallback_default`, `fallback_network`, `fallback_gps`,
+  `fallback_min` and `fallback_bt_recon`, which your theme doesn't define. The log says the screen
+  "will draw without a status bar".
+- Everything else keeps working.
+
+**New slots a 2.0 theme should style itself:**
+- `bt_recon_list_path` (top level): the Bluetooth results list, a slot `template` like the Wi-Fi
+  recon list. Variables `$_BT_RESULT_*` (`TITLE`, `MAC`, `RSSI`, `TYPE`, `VENDOR_SHORT`,
+  `LAST_SEEN`) and `$_BT_LIST_*` paging.
+- `generic_menus`:
+  - Bluetooth device screens: `bt_recon_selected_device`, `bt_recon_advertising_data`
+    (`$_BT_SELECTED_*`)
+  - `recon_new_scan_submenu`
+  - `settings_bluetooth_submenu` (`$_BT_*` scan settings)
+  - `settings_gps_advanced` (`$_GPS_*`: native/gpsd, connection, protocol, readiness, accuracy,
+    satellites, signal)
+  - one help page per settings menu: `alerts_dashboard_explained`,
+    `settings_{display,general,network,ringtone,system,bluetooth}_submenu_explained`,
+    `settings_gps_advanced_explained` and `pineap_{pineap,openap,evilwpa,filters,ssidpool}_
+    submenu_explained`
+- `status_bars.bt_recon` (items Time, Battery, GPS, Wigle, `BTDB` on/off, and `BTScan` with
+  `off`/`both`/`both_active`/`classic`/`le`/`le_active`). Point the recon dashboard at it with
+  `"bt_status_bar": "bt_recon"`. Stock also adds `BTScan` to the recon status bar.
+- `signal_templates.bt_signal`: thresholds `min_threshold -95`, `weak_threshold -80`,
+  `strong_threshold -60`, `max_threshold -40`, with layer lists `minimum_signal`, `weak_signal`,
+  `strong_signal` and `max_signal`.
+
+**GPS status icon:** states are now `disconnected`, `acquiring`, `nofix`, `weak` and `fix`. Tested
+with a receiver attached and no fix: with all names defined it drew `weak`, without `weak` it
+drew `nofix`, and with only the old `on`/`off` it drew `off`. Define all five; keep `on`/`off`
+too if the theme also targets 1.1.x.
+
+**Smaller changes:**
+- The payload log's error indicator key is now `payload_errored_indicator`.
+- Optional layout keys `channel_x`, `channel_y` and `channel_row_height` place the recon
+  dashboard's live channel view.
+- The legacy top-level `*_path` keys for settings and PineAP menus are no longer read.
+- Unused stock template entries were dropped; your own entries still work.
+- 2.0 also guards against several theme crashes (empty menu pages, undefined status bars,
+  `line_height`).
+
+Same rule as always: on the new screens, only display variables the stock 2.0 screens display.
+
 
 ## Framework version (1.1.2 → 1.1.3)
 - 1.1.3 expects **`"theme_framework_version": "0.8"`**. A theme left on `"0.7"` throws a framework

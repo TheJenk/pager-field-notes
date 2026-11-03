@@ -16,8 +16,12 @@ what peripherals/filesystems "just work." ~354 opkg packages are installed.
   `hcxwltool`, `hcxhash2cap`, `wlancap2wpasec`.
 - Packet capture via `tcpdump` (and `libpcap` is present for your own tools).
 
-## Bluetooth (BlueZ)
-Full stack: `bluetoothd`, `bluetoothctl`, `btmgmt`, `hcitool`, `hciconfig`, `gatttool`, `sdptool`,
+## Bluetooth
+**2.0.0+:** the `blue5` scanner owns the adapter and stops `bluetoothd`. Read devices with
+`blue5ctl fetch` or the `recon/bluetooth/*` API; see [What changed in 2.0.0](../firmware/2.0.0.md).
+The BlueZ notes below are for 1.1.x.
+
+BlueZ (1.1.x) full stack: `bluetoothd`, `bluetoothctl`, `btmgmt`, `hcitool`, `hciconfig`, `gatttool`, `sdptool`,
 `rfcomm`, `l2ping`, `hcidump`, `btmon`, over D-Bus. BLE/BT scanning and GATT are possible. Note: in a
 payload context prefer `bluetoothctl` — `btmgmt`/`hciconfig` tend to hang fighting `bluetoothd`.
 
