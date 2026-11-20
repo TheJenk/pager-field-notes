@@ -35,6 +35,10 @@ reference point: firmware **1.1.3** (`DISTRIB_RELEASE 24.10.1`), theme framework
   [Hak5 command reference](payloads/ducky-commands.md),
   [building native/Go tools](payloads/building.md), [proven patterns](payloads/patterns.md)
 - **Firmware findings** — [confirmed bugs & launch internals](firmware/findings.md)
+- **AI skills** — [Pager Payload Skills](skills/pager-payload-skills.md): one self-contained file
+  that lets an AI assistant (or you) build, test offline, and package payloads, with no Pager
+  connection required. Works as a Claude Code skill or as pasted context for any assistant.
+  Covers firmware 2.0.0 and 1.1.3. (A themes counterpart may follow.)
 
 ## Contributing
 

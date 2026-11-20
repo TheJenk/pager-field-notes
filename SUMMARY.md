@@ -30,3 +30,7 @@
 
 - [What changed in 2.0.0](firmware/2.0.0.md)
 - [Confirmed bugs & launch internals](firmware/findings.md)
+
+## AI skills
+
+- [Pager Payload Skills](skills/pager-payload-skills.md)
