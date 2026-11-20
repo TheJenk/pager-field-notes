@@ -26,8 +26,11 @@ kernel 6.6.86.
   files), and are reverted by deleting the overlay copy. A **firmware update can overwrite them**, so
   keep a copy of anything you add.
 - **Flash layout (NOR, `/proc/mtd`):** `u-boot`, `u-boot-env`, `factory`, `firmware` (~64 MB, holding
-  `kernel` + the `rootfs` squashfs), `rootfs_data` (~32 MB jffs2 = the overlay). Bulk user storage is
-  the eMMC (`/dev/mmcblk0p1` → `/mmc`, ext4). `/tmp` is tmpfs (RAM).
+  `kernel` + the `rootfs` squashfs), `rootfs_data` (jffs2 = the overlay; ~15 MB usable on 2.0.0).
+  Bulk user storage is the **eMMC** (internal, soldered; `/dev/mmcblk0p1` → `/mmc`, ext4, ~3.6 GB,
+  ~10 MB/s writes). `/root` is `/mmc/root`, so loot lives on the eMMC. `/tmp` is tmpfs (RAM, ~120 MB,
+  cleared at reboot).
+- **Boot time:** about 90 s to a ready UI on 2.0.0 (up to ~3.5 min on 1.1.x).
 
 See also: [capabilities](capabilities.md) (what's installed/supported) and
 [radios & LEDs](radios-and-leds.md).

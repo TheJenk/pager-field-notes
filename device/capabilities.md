@@ -1,7 +1,20 @@
 # Capabilities: what's installed & supported
 
-A map of what ships on the device (firmware 1.1.3) so you know what you can call from a payload and
-what peripherals/filesystems "just work." ~354 opkg packages are installed.
+A map of what ships on the device (surveyed on firmware 1.1.3, re-checked on 2.0.0) so you know what
+you can call from a payload and what peripherals/filesystems "just work." ~354 opkg packages are
+installed.
+
+## Quick check: present vs missing (2.0.0, verified)
+- **Present:** **bash 5.2**, busybox, `awk` (with `systime`/`strftime`/trig), `jq`, `sqlite3`,
+  `curl`, `wget`, `nc`, `timeout`, `setsid`, `flock`, `killall`, `pgrep`, `logger`, `stty`,
+  `base64`, `gzip`, `hexdump`, `opkg`, `fbi`, and the RTL-SDR tools (`rtl_sdr`, `rtl_tcp`,
+  `rtl_power`, `rtl_test`).
+- **Missing:** `python`, `perl`, `lua`, any compiler, `pkill`, `nohup`, `socat`, `xxd`, `od`,
+  `bc`, `inotifywait`, `ffmpeg`, and any serial terminal program. Substitutes: `pgrep`+`kill`,
+  `setsid`, `hexdump`, and `awk` for maths.
+- **Installing extra packages** with `opkg` needs internet on the Pager. The writable root overlay is
+  small (~15 MB on 2.0.0), so payloads should bundle what they need instead of depending on
+  installed packages.
 
 ## Scripting & languages (on device)
 - **bash** (full, not just ash), `coreutils`, `awk`, `jq`, `sqlite3`, `openssl`, `git`, `nano`, `file`.

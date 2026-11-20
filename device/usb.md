@@ -13,9 +13,15 @@ There is a **USB host port** (fronted by an internal USB 2.0 hub) where peripher
 receivers, Wi-Fi dongles, serial/UART devices, etc. They enumerate on the internal bus (as `1-1.x`).
 
 To connect a **UART / serial peripheral** while the USB-C link is busy with your computer, use this
-**host port**. It appears to be USB-A (common dongles plug straight in), so a **USB-C peripheral needs
-a C-to-A adapter**. Mind the **power budget** — the port runs a GPS or Wi-Fi dongle fine, but a hungrier
-device (something that boots its own Linux and does network work) may not get enough current; test it.
+**host port**. It's **USB-A**, so a **USB-C peripheral needs a C-to-A adapter**. *Verified:* the
+USB-A host port and the USB-C computer link **work at the same time**, so a peripheral can be
+plugged in while you stay connected. Mind the **power budget**: GPS sticks, Wi-Fi dongles, SDRs,
+small microcontroller boards and even a small Linux gadget ran fine, but test anything hungrier, or
+use a powered hub.
+
+**Serial behaviour:** opening a USB-serial port toggles DTR, and many boards reset on DTR, so hold
+one open descriptor for the whole session. The GPS stack may also probe new serial devices. See
+[patterns](../payloads/patterns.md#serial--uart-peripherals--verified).
 
 ## USB-serial driver support
 A broad set of USB-serial drivers is loaded, so almost any common UART bridge enumerates as

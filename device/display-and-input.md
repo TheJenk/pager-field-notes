@@ -12,9 +12,33 @@
   So memory is organized as 480 columns of 222 pixels, with each column's rows flipped. Use this both
   to draw and to decode a captured frame.
 - Panel refresh is about **20 fps** — draw at that rate or slower; faster is wasted.
-- **Capturing a frame** (for debugging a UI): read the raw device and reshape it, e.g.
-  `gzip -c /dev/fb0 | base64` over a link, then on your host decode base64 → gunzip → interpret as
-  222×480 RGB565 and apply the rotation formula to get a 480×222 image.
+- The panel controller is an **ST7796U** on SPI (fbtft driver). The rotation and the 20 fps cap
+  come from its device-tree settings (`rotation` 90, `fps` 20). The firmware's own boot splash files
+  (`/lib/pager/*.fb`) are raw frames in this same rotated layout.
+- Colour is little-endian RGB565: `(r & 0xF8) << 8 | (g & 0xFC) << 3 | b >> 3`. No red/blue swap.
+- **Backlight:** `/sys/class/backlight/backlight_pwm/brightness` (0–16). The screen still dims and
+  sleeps on the user's timeout during a takeover.
+- **Capturing a frame** (for debugging a UI): read the raw device and convert it. Over SSH:
+  `cat /dev/fb0 > fb.raw`, then
+  `ffmpeg -f rawvideo -pixel_format rgb565le -video_size 222x480 -i fb.raw -vf transpose=2 out.png`.
+  Without ffmpeg, apply the rotation formula yourself. On a slow link, `gzip -c /dev/fb0 | base64`
+  and decode on the host. A USB link manages about 5–6 raw frames per second for video.
+- **Drawing without a compiler:** `fbi` can show a JPEG/PNG on `/dev/fb0`, and `PROMPT_IMAGE` shows
+  one as a modal. Pure-bash drawing works by writing 444-byte rows (one upright column each) with
+  `dd … conv=notrunc`, but it's only fast enough for coarse, slow-changing displays.
+
+## Taking over the screen — *verified*
+`UI_TAKEOVER` makes the Pager app stop drawing and stop handling buttons; `UI_RELEASE` hands them
+back. Rules learned on hardware:
+1. Call both **from `payload.sh`**, not only from inside your binary. Otherwise the payload log
+   screen keeps redrawing and the desktop flashes through.
+2. `trap` `UI_RELEASE` on every exit path, and run it **first** in cleanup so a slow cleanup step
+   can't leave the screen frozen.
+3. Draw a first frame **immediately**, before any slow setup.
+4. **Drain the launch keypress.** The button press that started the payload is often still queued,
+   so discard input for the first ~150–400 ms.
+5. Don't `SIGSTOP` the UI process or poke the console (an older technique). The takeover is the
+   sanctioned handoff.
 
 ## Input (buttons)
 - `/dev/input/event0` (device name `keys`). Standard Linux evdev. On this 32-bit kernel each
@@ -36,5 +60,11 @@
   select/confirm** and **Red is back/exit**.
 - If you leave the **Power** key unhandled in a takeover payload, the system still does its normal
   display-sleep (evdev broadcasts to all readers).
+- `value` is 1 for press, 0 for release and 2 for auto-repeat while held. For a **long press**, time
+  press-to-release (~600 ms works well), and fire tap actions on release if a button also has a hold
+  action.
+- The device-tree labels for the two buttons (`a-button`/`b-button`, `BTN_SOUTH`/`BTN_EAST`) don't
+  map cleanly to colours, so go by the codes above.
 - **Injecting input** (for automated testing) is possible by writing EV_KEY press + EV_SYN +
-  EV_KEY release + EV_SYN records to `event0`.
+  EV_KEY release + EV_SYN records to `event0`. That needs a small native helper. After the display
+  dims or a modal opens, injected input may stop updating the UI; raise the screen timeouts first.

@@ -92,6 +92,10 @@ Payload menus shown from DuckyScript `PROMPT` / `ALERT` render as a **modal aler
 (e.g. 13 lines) clips unless you enlarge the alert/notification panel and give the input area a high
 `max_lines`. Size those panels generously if payloads will show long menus.
 
+**`$_INPUT_NAME` shows the wrong folder name** — *verified (1.1.x)*. Inside a payload category list it
+holds the *first payload folder with content* (e.g. "games"), not the folder the user opened. The
+stock theme shows the same wrong name. Don't use it as a folder title; use fixed text instead.
+
 ## Image economy
 Every image is decoded and cached on the device; generated canvases are cached on top. What matters is
 **decoded pixels** (sum of width × height of every PNG) and the count of full-screen images, more than

@@ -18,7 +18,8 @@ to**. Targets that are meant to run a command or launch a payload fall through a
   feature that **regressed** (the handler is present but the target no longer routes to it).
 
 **Implication:** on current firmware you can't make, say, a desktop icon launch a payload. Payloads are
-launched from the Payloads app or via the `payloads/{id}/run_payload` API. If you need "tap a thing →
+launched from the Payloads app (on 2.0.0 the `payloads/{id}/run_payload` route doesn't work on the
+Pager either; see [local API](../device/local-api.md)). If you need "tap a thing →
 run a payload", it currently requires either Hak5 restoring the routing, or patching the UI binary
 (impractical: a large stripped Go MIPS binary; a bad patch bricks the UI, recoverable only over SSH).
 

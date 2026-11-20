@@ -20,7 +20,9 @@ assistants help), written as plain Markdown you can read, clone, or feed to a to
 
 Firmware moves; treat these as point-in-time notes. Most were **verified on hardware**; a few are
 **inferred** and labelled as such. Where a detail is version-specific it names the firmware. Current
-reference point: firmware **1.1.3** (`DISTRIB_RELEASE 24.10.1`), theme framework **0.8**.
+reference point: firmware **2.0.0** (theme framework **0.9**), with notes for **1.1.3**
+(`DISTRIB_RELEASE 24.10.1`, framework 0.8) where behaviour differs. See
+[What changed in 2.0.0](firmware/2.0.0.md).
 
 ## Contents
 
@@ -34,7 +36,8 @@ reference point: firmware **1.1.3** (`DISTRIB_RELEASE 24.10.1`), theme framework
 - **Payloads** — [basics](payloads/basics.md),
   [Hak5 command reference](payloads/ducky-commands.md),
   [building native/Go tools](payloads/building.md), [proven patterns](payloads/patterns.md)
-- **Firmware findings** — [confirmed bugs & launch internals](firmware/findings.md)
+- **Firmware findings** — [what changed in 2.0.0](firmware/2.0.0.md),
+  [confirmed bugs & launch internals](firmware/findings.md)
 - **AI skills** — [Pager Payload Skills](skills/pager-payload-skills.md): one self-contained file
   that lets an AI assistant (or you) build, test offline, and package payloads, with no Pager
   connection required. Works as a Claude Code skill or as pasted context for any assistant.

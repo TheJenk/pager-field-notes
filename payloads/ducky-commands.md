@@ -1,8 +1,11 @@
 # Hak5 command reference (DuckyScript verbs)
 
-The Pager's DuckyScript "commands" are native helper binaries in `/usr/bin` (all-caps names). You call
-them straight from a `payload.sh`. This is the set present on firmware 1.1.3 — a map of what's built in
-so you don't reimplement it. (The official docs describe usage; this is just the inventory, grouped.)
+The Pager's DuckyScript "commands" are the all-caps names in `/usr/bin`. Almost all of them are
+symlinks to **one multicall binary** that turns each call into a request to the local API
+(`/tmp/api.sock`); that's why dialogs are drawn by the Pager app and the result comes back on
+stdout. You call them straight from a `payload.sh`. There are **139** on firmware 1.1.3, and 2.0.0
+has the same set (no new commands). This page maps what's built in so you don't reimplement it. (The
+official docs describe usage; this is the inventory, grouped.)
 
 > Payloads also get shell helper functions from `/lib/hak5` (`commands.sh`, `pineapple.sh`) and the
 > `UI_TAKEOVER`/`UI_RELEASE` handoff. See [local API & helpers](../device/local-api.md).
@@ -63,3 +66,28 @@ Notes:
   an audit trail (see [patterns](patterns.md)).
 - For "alert me when X" where X isn't a built-in alert event, don't look for a command — use a
   background watcher (see [patterns](patterns.md)).
+
+## Usage notes & gotchas — *verified*
+- **Results come back on stdout:** `choice=$(LIST_PICKER "Title" opt1 opt2 opt3 default)` (the last
+  argument is the default). `CONFIRMATION_DIALOG` prints `1` (yes) or `0` (no); its exit status
+  signals rejected (3) or error (4). `START_SPINNER` prints an id for `STOP_SPINNER`.
+  `WAIT_FOR_INPUT` prints the pressed button's name.
+- **`ALERT` queues behind an open `LIST_PICKER`.** It only appears after the menu closes. Use
+  `PROMPT` for feedback inside a menu flow; `ALERT` suits background or task-flow payloads.
+- **`PROMPT_QR` and `PROMPT_IMAGE` are modals the app draws**, not a screen takeover: the payload
+  blocks until they're dismissed. Images must be **PNG or JPEG**.
+- **The dialogs and `WAIT_FOR_INPUT` need the UI.** During `UI_TAKEOVER`, read
+  `/dev/input/event0` yourself. `DPADLED`, `VIBRATE` and `RINGTONE` still work during a takeover.
+- **Sound follows the user's mute.** With the volume preference at 0, `RINGTONE` and
+  `ALERT_RINGTONE` are silent. A second `RINGTONE` is refused while one is playing.
+- **Built-in ringtone names:** `alert battery_critical battery_low bonus bootup deskphone error
+  getkey getmachine hack_stealth hak5_the_planet halt health leveldone mute noway pager
+  power_connected power_disconnected pushwall ringring single_beep urgent warning xp yeah`. You can
+  also pass any RTTTL string.
+- `DISABLE_DISPLAY`/`ENABLE_DISPLAY` only switch the backlight; they don't pause the UI.
+- `UI_TAKEOVER`, `UI_RELEASE`, `DISABLE_DISPLAY`, `ENABLE_DISPLAY`, `DO_A_BARREL_ROLL`,
+  `USB_STORAGE` and `USB_WAIT` **ignore `--help` and just run.** Don't loop `--help` over the whole
+  set.
+- `DO_A_BARREL_ROLL` starts a looping D-pad LED chase; `DPADLED off` (or a UI restart) ends it.
+- `GPS_CONFIGURE` changed its arguments in 2.0.0 (see [What changed in 2.0.0](../firmware/2.0.0.md)).
+- `PINEAPPLE_SET_BANDS wlan1mon 2` returned success on 2.0.0, but hopping kept visiting 5 GHz.
