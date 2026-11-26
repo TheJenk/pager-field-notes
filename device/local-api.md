@@ -28,6 +28,10 @@ Useful routes seen in use:
 - **2.0.0+:** `pineap/gps/get` (native GPS position and status), `recon/wifi/{status,devices,count}`,
   `recon/wifi/devices/{mac}/clients`, `recon/bluetooth/{status,devices}`,
   `recon/bluetooth/devices/{mac}` and `recon/setup`. See [What changed in 2.0.0](../firmware/2.0.0.md).
+- **2.1.0+:** `recon/captures`, `settings/wifi/enterprise_ap[/certificate|/profiles…]`,
+  `network/change_applying`, `clients/kick`, `pineap/stop|respawn`,
+  `pineap/log/handshakes/start|stop`. `status` gains `booted`, `version`, `channel` and `uptime`.
+  `debug/memory` is gone. See [What changed in 2.1.0](../firmware/2.1.0.md).
 
 Shell helpers wrapping the API live in `/lib/hak5/commands.sh` (`HAK5_API_GET` / `HAK5_API_POST` /
 `HAK5_API_PUT`). The HTTP method matters: a wrong one returns **405**.

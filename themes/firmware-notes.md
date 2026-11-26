@@ -1,7 +1,17 @@
 # Theme firmware notes & gotchas
 
-Things learned testing themes on real hardware. Current reference: firmware **2.0.0**, theme framework
+Things learned testing themes on real hardware. Current reference: firmware **2.1.0**, theme framework
 **0.9**. Notes below the 2.0.0 section were found on 1.1.x and still apply unless marked.
+
+## Firmware 2.1.0 (framework still 0.9)
+- **Nothing to change.** The framework version, template variables, theme functions and the stock
+  theme are all the same as 2.0.0.
+- **Updating resets the active theme to the stock one.** Your themes in `/root/themes` are kept;
+  switch back from Settings, or with `uci set system.@pager[0].theme_name=<name>` and
+  `…theme_path=/root/themes/<name>`, then `uci commit system` and
+  `/etc/init.d/pineapplepager restart`.
+- The display is faster (a full frame takes about 39 ms instead of 54), so animation timing tuned
+  on 2.0 may look quicker.
 
 ## Firmware 2.0.0 / theme framework 0.9
 2.0.0 expects **`"theme_framework_version": "0.9"`** and adds new screens. Tested with a 0.8 theme:

@@ -15,7 +15,7 @@ including several behaviours that aren't in the official docs.
 > `docs.hak5.org/wifi-pineapple-pager`. The Pager is a security-testing tool: only use payloads on
 > networks and devices you own or are authorized to test.
 >
-> **Versions.** Verified on firmware **2.0.0** (Nov 2026) and **1.1.3**. When a fact differs between
+> **Versions.** Verified on firmware **2.1.0** and **2.0.0** (Nov 2026) and **1.1.3**. When a fact differs between
 > versions, this file says which version it applies to. Firmware changes things, so check the
 > version first (section 3).
 
@@ -259,17 +259,25 @@ but don't write to unknown addresses.
 FW=$(head -1 /etc/pineapplepager/version)        # e.g. "2.0.0"
 ```
 
-| Area | 1.1.x | 2.0.0 |
+| Area | 1.1.x | 2.0.0 (2.1.0 the same unless noted) |
 |---|---|---|
 | GPS | `gpsd` on the serial GPS; read with `gpspipe -w` | **pineapd reads it natively; gpsd disabled.** `gpspipe` gets nothing. Use `/api/pineap/gps/get` |
 | Bluetooth | BlueZ (`bluetoothd`, `bluetoothctl`) | **`blue5` owns the adapter and stops bluetoothd.** `bluetoothctl` **hangs**. Use `blue5ctl` |
 | Wi-Fi | you may add your own vif on phy1 | pineapd runs `wlan0mon` + `wlan1mon`. **Sniff those passively; don't retune them.** |
 | `GPS_CONFIGURE` | `GPS_CONFIGURE <serial> [speed]` | `GPS_CONFIGURE PINEAP [serial]` or `GPS_CONFIGURE GPSD [serial] [speed]` |
 | Theme framework | 0.7 / 0.8 | 0.9 |
-| DuckyScript commands | 139 | same set (no new commands) |
+| DuckyScript commands | 139 | same set on 2.0.0. 2.1.0 adds `PINEAPPLE_KICK_CLIENT` and `PINEAPPLE_PINEAPD_STOP` / `_RESPAWN` |
+| Payload stop (2.1.0) | — | each payload is its own process group; UI "stop" kills it. **`setsid` workers survive**, plain `&` children don't |
+| Payload `PATH` (2.1.0) | `/usr/bin:/bin:/usr/sbin:/sbin` | adds `/usr/local/*`, `.`, and **`/mmc/bin` `/mmc/sbin` `/mmc/usr/*`** |
+| SSH / audio (2.1.0) | OpenSSH; PWM buzzer | dropbear; buzzer is an ALSA card, `pwmplay file.mp3` plays audio |
 
 Updating to 2.0 **removed installed user payloads** (`/root/payloads/user/*`) and regenerated the
 SSH host key. Loot and themes survived. Files you keep elsewhere under `/mmc` survive too.
+Updating to **2.1.0 kept** payloads, themes, loot and the host key, but **reset the active theme to
+stock** and dropped files added outside `/mmc` (such as links in `/usr/bin`). On 2.1.0 the recon DB
+is SQLite WAL (copy `-wal`/`-shm` too), and you must **never run `pineapd --help`**: it starts a
+second pineapd that takes over the real one. For UTC timestamps use `date -u`: `date` prints the
+configured zone (on 2.0 too, even when it was labelled "UTC"). See [firmware 2.1.0](../firmware/2.1.0.md).
 
 **Support both versions in one payload:**
 
@@ -325,8 +333,9 @@ Folder names use **no spaces** (underscores or dashes). Existing user categories
   DIR="${_PAYLOAD_HOME:-/root/payloads/user/general/My_Payload}"
   [ -x "$DIR/mytool" ] || DIR="$(cd "$(dirname "$0")" && pwd)"
   ```
-- `PATH=/usr/bin:/bin:/usr/sbin:/sbin`. If you install extra tools elsewhere, add that folder to
-  `PATH` yourself.
+- `PATH=/usr/bin:/bin:/usr/sbin:/sbin` on 1.1.x/2.0. If you install extra tools elsewhere, add that
+  folder to `PATH` yourself. **2.1.0** adds `/mmc/bin`, `/mmc/sbin`, `/mmc/usr/*`, `/usr/local/*` and
+  `.` (the current directory).
 - `LOG` lines appear on the payload's on-screen log while it runs.
 - `/lib/hak5/commands.sh` and `/lib/hak5/pineapple.sh` hold shell helpers (`HAK5_API_GET/POST/PUT`,
   and the dialog constants `DUCKYSCRIPT_USER_CONFIRMED=1`, `DUCKYSCRIPT_USER_DENIED=0`,

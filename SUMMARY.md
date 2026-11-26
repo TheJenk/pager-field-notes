@@ -28,6 +28,7 @@
 
 ## Firmware findings
 
+- [What changed in 2.1.0](firmware/2.1.0.md)
 - [What changed in 2.0.0](firmware/2.0.0.md)
 - [Confirmed bugs & launch internals](firmware/findings.md)
 

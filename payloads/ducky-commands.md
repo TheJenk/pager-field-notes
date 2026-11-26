@@ -33,6 +33,9 @@ official docs describe usage; this is the inventory, grouped.)
 - SSID pool: `PINEAPPLE_SSID_POOL_{ADD,ADD_FILE,DELETE,CLEAR,LIST,START,STOP,COLLECT_START,
   COLLECT_STOP}`.
 - Loot: `PINEAPPLE_LOOT_ARCHIVE`.
+- **2.1.0+:** `PINEAPPLE_KICK_CLIENT <mac> [block]` (disconnects a client from the Pager's own
+  APs; `block` also deny-lists it), and the developer commands `PINEAPPLE_PINEAPD_STOP` /
+  `PINEAPPLE_PINEAPD_RESPAWN`. `PINEAPPLE_SET_BANDS` actually applies the bands from 2.1.0 on.
 
 ## Wi-Fi AP / client / capture
 `WIFI_CONNECT`, `WIFI_DISCONNECT`, `WIFI_CLEAR`, `WIFI_WAIT`,
@@ -56,6 +59,8 @@ official docs describe usage; this is the inventory, grouped.)
 
 ## System / firmware / theme
 `INSTALL_FIRMWARE`, `RESTORE_DEFAULT_THEME`, `DEVELOPER_THEME_RELOAD`, `TOS_ACCEPT`, `SLA_ACCEPT`.
+On 2.1.0, `pwmplay file.mp3` (not a DuckyScript command, but on `PATH`) plays audio through the
+buzzer.
 
 ---
 
